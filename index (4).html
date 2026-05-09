@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mehedi Hasan — Graphic & UI/UX Designer</title>
+<meta name="description" content="Mehedi Hasan — Junior Graphic Designer at Digital Crop. Specializing in brand identity, visual storytelling, and UI/UX design.">
+
+<!-- Favicon: Blue "M" SVG as data URI -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23000'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Arial Black,sans-serif' font-weight='900' font-size='20' fill='%234f6ef7'%3EM%3C/text%3E%3C/svg%3E">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: { blue: '#4f6ef7', dark: '#0a0a0a', card: '#111' },
+      fontFamily: { display: ['Bebas Neue','sans-serif'], body: ['DM Sans','sans-serif'] }
+    }
+  }
+}
+</script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --blue: #4f6ef7; --dark: #0a0a0a; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--dark); color: #fff; font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #000; }
+  ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 2px; }
+
+  /* Noise texture overlay */
+  body::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+
+  /* Animations */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  @keyframes scroll { 0%{transform:translateY(0);opacity:1} 100%{transform:translateY(8px);opacity:0} }
+  @keyframes pulse-ring { 0%{transform:scale(.85);opacity:.6} 100%{transform:scale(1.15);opacity:0} }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  .fade-up { opacity:0; animation: fadeUp .7s ease forwards; }
+  .fade-in { opacity:0; animation: fadeIn .7s ease forwards; }
+  .d1{animation-delay:.1s} .d2{animation-delay:.25s} .d3{animation-delay:.4s} .d4{animation-delay:.55s} .d5{animation-delay:.7s}
+
+  /* Reveal on scroll */
+  .reveal { opacity:0; transform:translateY(28px); transition: opacity .65s ease, transform .65s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+
+  /* Nav */
+  nav { position:fixed; top:0; left:0; right:0; z-index:50; transition:background .3s; }
+  nav.scrolled { background:rgba(10,10,10,.92); backdrop-filter:blur(12px); border-bottom:1px solid rgba(79,110,247,.15); }
+
+  /* Hero gradient blob */
+  .blob { position:absolute; border-radius:50%; filter:blur(80px); opacity:.18; pointer-events:none; }
+
+  /* Blue accent line */
+  .accent-line { width:48px; height:3px; background:var(--blue); border-radius:2px; }
+
+  /* Skill card */
+  .skill-card { background:#111; border:1px solid rgba(255,255,255,.06); border-radius:12px; padding:1.5rem; transition:border-color .3s,transform .3s; cursor:default; }
+  .skill-card:hover { border-color:var(--blue); transform:translateY(-4px); }
+
+  /* Timeline */
+  .tl-dot { width:12px; height:12px; background:var(--blue); border-radius:50%; flex-shrink:0; margin-top:6px; box-shadow:0 0 0 4px rgba(79,110,247,.2); }
+
+  /* Portfolio card */
+  .port-card { position:relative; overflow:hidden; border-radius:12px; background:#111; border:1px solid rgba(255,255,255,.06); }
+  .port-card img { width:100%; aspect-ratio:4/3; object-fit:cover; transition:transform .5s ease; display:block; }
+  .port-card:hover img { transform:scale(1.06); }
+  .port-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 60%); opacity:0; transition:opacity .35s; display:flex; align-items:flex-end; padding:1.25rem; }
+  .port-card:hover .port-overlay { opacity:1; }
+
+  /* Cert card */
+  .cert-card { background:#111; border:1px solid rgba(255,255,255,.06); border-radius:10px; padding:1.25rem 1.5rem; transition:border-color .3s; }
+  .cert-card:hover { border-color:var(--blue); }
+
+  /* CTA buttons */
+  .btn-primary { display:inline-flex; align-items:center; gap:.5rem; background:var(--blue); color:#fff; padding:.7rem 1.75rem; border-radius:6px; font-weight:600; letter-spacing:.03em; transition:opacity .2s,transform .2s; font-size:.95rem; }
+  .btn-primary:hover { opacity:.88; transform:translateY(-2px); }
+  .btn-outline { display:inline-flex; align-items:center; gap:.5rem; background:transparent; color:#fff; padding:.7rem 1.75rem; border-radius:6px; border:1px solid rgba(255,255,255,.25); font-weight:500; letter-spacing:.03em; transition:border-color .2s,transform .2s; font-size:.95rem; }
+  .btn-outline:hover { border-color:#fff; transform:translateY(-2px); }
+
+  /* Marquee */
+  .marquee-inner { display:flex; width:max-content; animation:marquee 22s linear infinite; }
+  .marquee-inner:hover { animation-play-state:paused; }
+
+  /* Social link */
+  .soc { width:42px; height:42px; border:1px solid rgba(255,255,255,.15); border-radius:8px; display:flex; align-items:center; justify-content:center; transition:border-color .2s,background .2s; }
+  .soc:hover { border-color:var(--blue); background:rgba(79,110,247,.12); }
+
+  /* Cursor dot */
+  #cursor { width:8px; height:8px; background:var(--blue); border-radius:50%; position:fixed; pointer-events:none; z-index:9999; transition:transform .15s; mix-blend-mode:difference; }
+</style>
+</head>
+<body>
+
+<!-- Custom cursor (desktop only) -->
+<div id="cursor"></div>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav id="nav">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <span style="font-family:'Bebas Neue',sans-serif; font-size:1.6rem; letter-spacing:.08em; color:var(--blue);">MH</span>
+    <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+      <a href="#about" class="hover:text-white transition-colors">About</a>
+      <a href="#skills" class="hover:text-white transition-colors">Skills</a>
+      <a href="#work" class="hover:text-white transition-colors">Work</a>
+      <a href="#experience" class="hover:text-white transition-colors">Experience</a>
+      <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+    </div>
+    <a href="mailto:mehedi@example.com" class="btn-primary text-sm py-2 px-5">Hire Me</a>
+  </div>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+  <!-- Blobs -->
+  <div class="blob w-96 h-96" style="background:var(--blue);top:-80px;right:-80px;"></div>
+  <div class="blob w-72 h-72" style="background:#7c3aed;bottom:0;left:-60px;"></div>
+
+  <div class="max-w-6xl mx-auto px-6 relative z-10 w-full">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <!-- Text -->
+      <div>
+        <p class="fade-up d1 text-xs uppercase tracking-widest text-blue-400 mb-4" style="color:var(--blue);">Available for work · Bangladesh</p>
+        <h1 class="fade-up d2" style="font-family:'Bebas Neue',sans-serif; font-size:clamp(3.5rem,8vw,6.5rem); line-height:.95; letter-spacing:.02em;">
+          CREATIVITY.<br>CLARITY.<br><span style="color:var(--blue);">IMPACT.</span>
+        </h1>
+        <p class="fade-up d3 mt-6 text-gray-400 text-base leading-relaxed max-w-md">
+          I'm <strong class="text-white">Mehedi Hasan</strong> — Graphic & UI/UX Designer at <span style="color:var(--blue);">Digital Crop</span>. I craft brand identities and digital experiences that convert.
+        </p>
+        <div class="fade-up d4 flex flex-wrap gap-3 mt-8">
+          <a href="#work" class="btn-primary"><i data-lucide="eye" style="width:16px;height:16px;"></i> View Portfolio</a>
+          <a href="#contact" class="btn-outline"><i data-lucide="send" style="width:16px;height:16px;"></i> Let's Talk</a>
+        </div>
+        <!-- Stats -->
+        <div class="fade-up d5 flex gap-8 mt-10 pt-8 border-t border-white/10">
+          <div><p class="text-2xl font-bold">2+</p><p class="text-xs text-gray-500 mt-1">Years Experience</p></div>
+          <div><p class="text-2xl font-bold">50+</p><p class="text-xs text-gray-500 mt-1">Projects Done</p></div>
+          <div><p class="text-2xl font-bold">3</p><p class="text-xs text-gray-500 mt-1">Certifications</p></div>
+        </div>
+      </div>
+      <!-- Photo -->
+      <div class="fade-in d3 flex justify-center md:justify-end">
+        <div class="relative">
+          <div class="absolute inset-0 rounded-2xl" style="background:var(--blue);filter:blur(40px);opacity:.25;transform:scale(.9);"></div>
+          <img src="https://via.placeholder.com/460x520/111111/4f6ef7?text=Mehedi+Hasan"
+               alt="Mehedi Hasan — Graphic Designer"
+               class="relative rounded-2xl w-72 md:w-96 object-cover border border-white/10">
+          <!-- Badge -->
+          <div class="absolute -bottom-4 -left-4 bg-black border border-white/10 rounded-xl px-4 py-3 flex items-center gap-3">
+            <div class="w-2 h-2 rounded-full" style="background:#22c55e; box-shadow:0 0 0 4px rgba(34,197,94,.2); animation:pulse-ring 1.5s ease-out infinite;"></div>
+            <span class="text-sm font-medium">Open to Opportunities</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Scroll hint -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
+    <span class="text-xs tracking-widest uppercase">Scroll</span>
+    <div class="w-px h-8 bg-white" style="animation:scroll 1.4s ease-in-out infinite;"></div>
+  </div>
+</section>
+
+<!-- ═══════════════ MARQUEE ═══════════════ -->
+<div class="py-5 border-y border-white/08 overflow-hidden" style="border-color:rgba(255,255,255,.06);">
+  <div class="marquee-inner text-xs font-medium tracking-widest uppercase text-gray-600" style="gap:0;">
+    <!-- repeated twice for seamless loop -->
+    <span class="px-8">Brand Identity</span><span class="px-2" style="color:var(--blue);">✦</span>
+    <span class="px-8">Visual Storytelling</span><span class="px-2" style="color:var(--blue);">✦</span>
+    <span class="px-8">UI/UX Design</span><span class="px-2" style="color:var(--blue);">✦</span>
+    <span class="px-8">Social Media Graphics</span><span class="px-2" style="color:var(--blue);">✦</span>
+    <span class="px-8">Illustration</span><span class="px-2" style="color:var(--blue);">✦</span>
+    <span class="px-8">Figma</span><span class="px-2" style="color:var(--blue);">✦</span>
+    <span class="px-8">Adobe Suite</span><span class="px-2" style="color:var(--blue);">✦</span>
+    <span class="px-8">Brand Identity</span><span class="px-2" style="color:var(--blue);">✦</span>
+    <span class="px-8">Visual Storytelling</span><span class="px-2" style="color:var(--blue);">✦</span>
+    <span class="px-8">UI/UX Design</span><span class="px-2" style="color:var(--blue);">✦</span>
+    <span class="px-8">Social Media Graphics</span><span class="px-2" style="color:var(--blue);">✦</span>
+    <span class="px-8">Illustration</span><span class="px-2" style="color:var(--blue);">✦</span>
+    <span class="px-8">Figma</span><span class="px-2" style="color:var(--blue);">✦</span>
+    <span class="px-8">Adobe Suite</span><span class="px-2" style="color:var(--blue);">✦</span>
+  </div>
+</div>
+
+<!-- ═══════════════ ABOUT ═══════════════ -->
+<section id="about" class="py-28 max-w-6xl mx-auto px-6">
+  <div class="grid md:grid-cols-2 gap-16 items-center">
+    <div class="reveal">
+      <div class="relative rounded-2xl overflow-hidden" style="background:#111;">
+        <img src="https://via.placeholder.com/520x600/111111/4f6ef7?text=About+Photo"
+             alt="Mehedi Hasan at work"
+             class="w-full object-cover rounded-2xl border border-white/08 opacity-90">
+        <div class="absolute bottom-5 right-5 bg-black/80 backdrop-blur border border-white/10 rounded-lg px-4 py-3">
+          <p class="text-xs text-gray-400">Currently at</p>
+          <p class="font-bold text-sm" style="color:var(--blue);">Digital Crop</p>
+        </div>
+      </div>
+    </div>
+    <div class="reveal" style="transition-delay:.15s;">
+      <p class="text-xs uppercase tracking-widest mb-3" style="color:var(--blue);">About Me</p>
+      <div class="accent-line mb-6"></div>
+      <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-6" style="font-family:'Bebas Neue',sans-serif; letter-spacing:.02em;">
+        Designing with Purpose &amp; Precision
+      </h2>
+      <p class="text-gray-400 leading-relaxed mb-4">
+        I'm a passionate <strong class="text-white">Graphic & UI/UX Designer</strong> currently working as a Junior Graphic Designer at <strong class="text-white">Digital Crop</strong> — a digital growth agency. I turn complex ideas into clean, compelling visuals.
+      </p>
+      <p class="text-gray-400 leading-relaxed mb-8">
+        My expertise spans <strong class="text-white">brand identity</strong>, social media design, UI/UX wireframing, and illustration — combining strategic thinking with aesthetic excellence to deliver work that doesn't just look good, but <em>performs</em>.
+      </p>
+      <a href="mailto:mehedi@example.com" class="btn-primary">
+        <i data-lucide="download" style="width:16px;height:16px;"></i> Download Resume
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SKILLS ═══════════════ -->
+<section id="skills" class="py-24" style="background:#080808;">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="reveal text-center mb-16">
+      <p class="text-xs uppercase tracking-widest mb-3" style="color:var(--blue);">Toolkit</p>
+      <h2 class="text-4xl md:text-5xl font-bold" style="font-family:'Bebas Neue',sans-serif; letter-spacing:.02em;">Skills & Tools</h2>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      <!-- Skill cards -->
+      <div class="skill-card reveal text-center">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-3" style="background:rgba(79,110,247,.15);">
+          <i data-lucide="image" style="width:20px;height:20px;color:var(--blue);"></i>
+        </div>
+        <p class="font-semibold text-sm">Adobe Photoshop</p>
+        <p class="text-xs text-gray-500 mt-1">Photo & Compositing</p>
+      </div>
+      <div class="skill-card reveal text-center" style="transition-delay:.08s;">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-3" style="background:rgba(79,110,247,.15);">
+          <i data-lucide="pen-tool" style="width:20px;height:20px;color:var(--blue);"></i>
+        </div>
+        <p class="font-semibold text-sm">Adobe Illustrator</p>
+        <p class="text-xs text-gray-500 mt-1">Vector & Illustration</p>
+      </div>
+      <div class="skill-card reveal text-center" style="transition-delay:.16s;">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-3" style="background:rgba(79,110,247,.15);">
+          <i data-lucide="figma" style="width:20px;height:20px;color:var(--blue);"></i>
+        </div>
+        <p class="font-semibold text-sm">Figma</p>
+        <p class="text-xs text-gray-500 mt-1">UI Design & Prototyping</p>
+      </div>
+      <div class="skill-card reveal text-center" style="transition-delay:.24s;">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-3" style="background:rgba(79,110,247,.15);">
+          <i data-lucide="layout-dashboard" style="width:20px;height:20px;color:var(--blue);"></i>
+        </div>
+        <p class="font-semibold text-sm">Canva</p>
+        <p class="text-xs text-gray-500 mt-1">Social & Marketing</p>
+      </div>
+      <div class="skill-card reveal text-center" style="transition-delay:.32s;">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-3" style="background:rgba(79,110,247,.15);">
+          <i data-lucide="layers" style="width:20px;height:20px;color:var(--blue);"></i>
+        </div>
+        <p class="font-semibold text-sm">UI/UX Design</p>
+        <p class="text-xs text-gray-500 mt-1">Research & Strategy</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PORTFOLIO ═══════════════ -->
+<section id="work" class="py-28 max-w-6xl mx-auto px-6">
+  <div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-14">
+    <div>
+      <p class="text-xs uppercase tracking-widest mb-3" style="color:var(--blue);">Portfolio</p>
+      <h2 class="text-4xl md:text-5xl font-bold" style="font-family:'Bebas Neue',sans-serif; letter-spacing:.02em;">Featured Work</h2>
+    </div>
+    <a href="#contact" class="btn-outline text-sm">See All Work <i data-lucide="arrow-up-right" style="width:14px;height:14px;"></i></a>
+  </div>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    <!-- Card 1 -->
+    <div class="port-card reveal">
+      <img src="https://via.placeholder.com/480x360/111111/4f6ef7?text=Social+Media+Flyer" alt="Social Media Flyer Design">
+      <div class="port-overlay">
+        <div>
+          <p class="text-xs uppercase tracking-widest mb-1" style="color:var(--blue);">Graphic Design</p>
+          <p class="font-bold">Social Media Flyer</p>
+        </div>
+      </div>
+    </div>
+    <!-- Card 2 -->
+    <div class="port-card reveal" style="transition-delay:.1s;">
+      <img src="https://via.placeholder.com/480x360/0a0a14/4f6ef7?text=Mandala+Art" alt="Mandala Art Illustration">
+      <div class="port-overlay">
+        <div>
+          <p class="text-xs uppercase tracking-widest mb-1" style="color:var(--blue);">Illustration</p>
+          <p class="font-bold">Mandala Art</p>
+        </div>
+      </div>
+    </div>
+    <!-- Card 3 -->
+    <div class="port-card reveal" style="transition-delay:.2s;">
+      <img src="https://via.placeholder.com/480x360/0d0d0d/4f6ef7?text=Flat+Illustration" alt="Flat Illustration Design">
+      <div class="port-overlay">
+        <div>
+          <p class="text-xs uppercase tracking-widest mb-1" style="color:var(--blue);">Illustration</p>
+          <p class="font-bold">Flat Illustration</p>
+        </div>
+      </div>
+    </div>
+    <!-- Card 4 -->
+    <div class="port-card reveal" style="transition-delay:.05s;">
+      <img src="https://via.placeholder.com/480x360/0f0f1a/4f6ef7?text=Brand+Identity" alt="Brand Identity Design">
+      <div class="port-overlay">
+        <div>
+          <p class="text-xs uppercase tracking-widest mb-1" style="color:var(--blue);">Branding</p>
+          <p class="font-bold">Brand Identity</p>
+        </div>
+      </div>
+    </div>
+    <!-- Card 5 -->
+    <div class="port-card reveal" style="transition-delay:.15s;">
+      <img src="https://via.placeholder.com/480x360/0a0a0a/4f6ef7?text=UI+Design" alt="UI/UX App Design">
+      <div class="port-overlay">
+        <div>
+          <p class="text-xs uppercase tracking-widest mb-1" style="color:var(--blue);">UI/UX</p>
+          <p class="font-bold">App UI Design</p>
+        </div>
+      </div>
+    </div>
+    <!-- Card 6 -->
+    <div class="port-card reveal" style="transition-delay:.25s;">
+      <img src="https://via.placeholder.com/480x360/0c0c10/4f6ef7?text=Typography+Poster" alt="Typography Poster Design">
+      <div class="port-overlay">
+        <div>
+          <p class="text-xs uppercase tracking-widest mb-1" style="color:var(--blue);">Typography</p>
+          <p class="font-bold">Poster Design</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ EXPERIENCE & EDUCATION ═══════════════ -->
+<section id="experience" class="py-24" style="background:#080808;">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="reveal text-center mb-16">
+      <p class="text-xs uppercase tracking-widest mb-3" style="color:var(--blue);">Journey</p>
+      <h2 class="text-4xl md:text-5xl font-bold" style="font-family:'Bebas Neue',sans-serif; letter-spacing:.02em;">Experience & Education</h2>
+    </div>
+    <div class="grid md:grid-cols-2 gap-12">
+      <!-- Experience -->
+      <div class="reveal">
+        <h3 class="font-bold text-lg mb-8 flex items-center gap-3">
+          <span class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(79,110,247,.15);">
+            <i data-lucide="briefcase" style="width:16px;height:16px;color:var(--blue);"></i>
+          </span>
+          Work Experience
+        </h3>
+        <div class="flex gap-5">
+          <div class="flex flex-col items-center">
+            <div class="tl-dot"></div>
+            <div class="w-px flex-1 mt-3" style="background:rgba(255,255,255,.1);"></div>
+          </div>
+          <div class="pb-10">
+            <span class="text-xs uppercase tracking-widest px-2 py-1 rounded" style="background:rgba(79,110,247,.15);color:var(--blue);">Current</span>
+            <h4 class="font-bold text-lg mt-3">Junior Graphic Designer</h4>
+            <p class="text-gray-400 text-sm mt-1">Digital Crop · Full-time</p>
+            <p class="text-gray-400 text-sm mt-1">2023 — Present · Bangladesh</p>
+            <p class="text-gray-500 text-sm mt-3 leading-relaxed">Designing social media content, brand materials, and visual identities that help businesses grow their online presence.</p>
+          </div>
+        </div>
+        <div class="flex gap-5">
+          <div class="flex flex-col items-center">
+            <div class="tl-dot" style="background:rgba(79,110,247,.4);"></div>
+          </div>
+          <div>
+            <h4 class="font-bold text-lg">Freelance Designer</h4>
+            <p class="text-gray-400 text-sm mt-1">Self-employed</p>
+            <p class="text-gray-400 text-sm mt-1">2022 — 2023</p>
+            <p class="text-gray-500 text-sm mt-3 leading-relaxed">Delivered graphic design solutions for clients across various industries — branding, flyers, and digital assets.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Education -->
+      <div class="reveal" style="transition-delay:.15s;">
+        <h3 class="font-bold text-lg mb-8 flex items-center gap-3">
+          <span class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:rgba(79,110,247,.15);">
+            <i data-lucide="graduation-cap" style="width:16px;height:16px;color:var(--blue);"></i>
+          </span>
+          Education
+        </h3>
+        <div class="flex gap-5">
+          <div class="flex flex-col items-center">
+            <div class="tl-dot"></div>
+            <div class="w-px flex-1 mt-3" style="background:rgba(255,255,255,.1);"></div>
+          </div>
+          <div class="pb-10">
+            <h4 class="font-bold text-lg">BSc in Computer Science</h4>
+            <p class="text-gray-400 text-sm mt-1">Pundra University of Science & Technology</p>
+            <p class="text-gray-400 text-sm mt-1">Ongoing · Bogura, BD</p>
+          </div>
+        </div>
+        <div class="flex gap-5">
+          <div class="flex flex-col items-center">
+            <div class="tl-dot" style="background:rgba(79,110,247,.4);"></div>
+          </div>
+          <div>
+            <h4 class="font-bold text-lg">Bachelor of Arts (BA)</h4>
+            <p class="text-gray-400 text-sm mt-1">Govt. Azizul Haque College</p>
+            <p class="text-gray-400 text-sm mt-1">Bogura, Bangladesh</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CERTIFICATIONS ═══════════════ -->
+<section class="py-24 max-w-6xl mx-auto px-6">
+  <div class="reveal text-center mb-14">
+    <p class="text-xs uppercase tracking-widest mb-3" style="color:var(--blue);">Verified</p>
+    <h2 class="text-4xl md:text-5xl font-bold" style="font-family:'Bebas Neue',sans-serif; letter-spacing:.02em;">Certifications</h2>
+  </div>
+  <div class="grid sm:grid-cols-3 gap-4">
+    <div class="cert-card reveal">
+      <div class="flex items-start gap-4">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(79,110,247,.15);">
+          <i data-lucide="award" style="width:18px;height:18px;color:var(--blue);"></i>
+        </div>
+        <div>
+          <p class="font-semibold">Design Certificate</p>
+          <p class="text-sm text-gray-400 mt-1">Grameenphone</p>
+          <p class="text-xs text-gray-600 mt-2">Digital Skills Program</p>
+        </div>
+      </div>
+    </div>
+    <div class="cert-card reveal" style="transition-delay:.1s;">
+      <div class="flex items-start gap-4">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(79,110,247,.15);">
+          <i data-lucide="award" style="width:18px;height:18px;color:var(--blue);"></i>
+        </div>
+        <div>
+          <p class="font-semibold">UI/UX Design</p>
+          <p class="text-sm text-gray-400 mt-1">Ostad</p>
+          <p class="text-xs text-gray-600 mt-2">Professional Course</p>
+        </div>
+      </div>
+    </div>
+    <div class="cert-card reveal" style="transition-delay:.2s;">
+      <div class="flex items-start gap-4">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(79,110,247,.15);">
+          <i data-lucide="award" style="width:18px;height:18px;color:var(--blue);"></i>
+        </div>
+        <div>
+          <p class="font-semibold">Graphic Design</p>
+          <p class="text-sm text-gray-400 mt-1">10 Minute School</p>
+          <p class="text-xs text-gray-600 mt-2">Design Fundamentals</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CONTACT ═══════════════ -->
+<section id="contact" class="py-28 relative overflow-hidden" style="background:#080808;">
+  <div class="blob w-96 h-96" style="background:var(--blue);bottom:-100px;right:-80px;opacity:.12;"></div>
+  <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+    <div class="reveal">
+      <p class="text-xs uppercase tracking-widest mb-4" style="color:var(--blue);">Get In Touch</p>
+      <h2 class="text-5xl md:text-7xl font-bold mb-6" style="font-family:'Bebas Neue',sans-serif; letter-spacing:.02em;">
+        LET'S CREATE<br><span style="color:var(--blue);">SOMETHING</span><br>GREAT.
+      </h2>
+      <p class="text-gray-400 mb-10 max-w-md mx-auto">Have a project in mind? I'm open to freelance work and full-time opportunities. Let's build something remarkable together.</p>
+      <a href="mailto:mehedi@example.com" class="btn-primary text-base px-8 py-3 mx-auto inline-flex">
+        <i data-lucide="mail" style="width:18px;height:18px;"></i> mehedi@example.com
+      </a>
+
+      <!-- Social links -->
+      <div class="flex items-center justify-center gap-3 mt-10">
+        <a href="#" class="soc" aria-label="Facebook"><i data-lucide="facebook" style="width:18px;height:18px;"></i></a>
+        <a href="#" class="soc" aria-label="LinkedIn"><i data-lucide="linkedin" style="width:18px;height:18px;"></i></a>
+        <a href="#" class="soc" aria-label="Behance">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 10H4V6h4c1.1 0 2 .9 2 2s-.9 2-2 2z"/><path d="M4 10v4h4.5c1.38 0 2.5-1.12 2.5-2.5S9.88 10 8.5 10H4z"/><path d="M14 8h6"/><path d="M14 12h6c0-2.21-1.34-4-3-4s-3 1.79-3 4 1.34 4 3 4c1.2 0 2.27-.72 2.77-1.76"/>
+          </svg>
+        </a>
+        <a href="#" class="soc" aria-label="Pinterest">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.04-2.83.19-.77 1.28-5.43 1.28-5.43s-.33-.65-.33-1.62c0-1.52.88-2.66 1.97-2.66.93 0 1.38.7 1.38 1.54 0 .94-.6 2.34-.91 3.64-.26 1.09.54 1.97 1.61 1.97 1.93 0 3.23-2.46 3.23-5.37 0-2.21-1.49-3.85-4.18-3.85-3.04 0-4.93 2.27-4.93 4.8 0 .87.26 1.49.67 1.96.19.22.21.31.14.56-.05.18-.16.62-.2.79-.07.26-.28.35-.51.26-1.44-.59-2.11-2.18-2.11-3.96 0-2.93 2.48-6.44 7.38-6.44 3.95 0 6.55 2.87 6.55 5.95 0 4.1-2.27 7.16-5.6 7.16-1.12 0-2.18-.61-2.54-1.3l-.73 2.87c-.24.91-.72 1.83-1.16 2.55.88.27 1.8.41 2.76.41 5.52 0 10-4.48 10-10S17.52 2 12 2z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="py-6 border-t text-center text-xs text-gray-600" style="border-color:rgba(255,255,255,.06);">
+  <p>© 2025 Mehedi Hasan · Designed with ❤️ in Bangladesh</p>
+</footer>
+
+<!-- ═══════════════ SCRIPTS ═══════════════ -->
+<script>
+  // Init Lucide icons
+  lucide.createIcons();
+
+  // Nav scroll effect
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Custom cursor (desktop only)
+  const cursor = document.getElementById('cursor');
+  if(window.innerWidth > 768) {
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX - 4 + 'px';
+      cursor.style.top = e.clientY - 4 + 'px';
+    });
+    document.querySelectorAll('a,button').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(3)');
+      el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
+    });
+  } else {
+    cursor.style.display = 'none';
+  }
+</script>
+</body>
+</html>
